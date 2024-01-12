@@ -1,7 +1,7 @@
 // iniciando projeto
 //console.log('hello world  ')
 
-import express, {Request, Response, NextFunction} from 'express'
+import express, {Request, Response, NextFunction, response} from 'express'
 import { resolve } from 'path'
 // nextFunction eh um tipo para trabalhar com middleware onde se passa a proxima funcao
 const app = express()
@@ -70,7 +70,7 @@ const usersDB : Array<User> = []
 
 interface ISessionsControllers {
     create(request : Request, response : Response) : void
-    delete(userID : number) : boolean
+    delete(req : Request<string>, res : Response) : Response
 }
 
 
@@ -80,12 +80,15 @@ class SessionsControllers implements ISessionsControllers{
         const userExists = usersDB.find(arrElement => arrElement.email === user.email) 
         console.log(userExists)
         if(userExists) return response.status(401).json({message : "user already exists"})
-
+        const userObject : User = new UsersClass(user.name, user.password, user.email)
+        usersDB.push(userObject)
         return response.status(201).json({message : "created"})
     }
 
-    delete(userID: number): boolean {
-
+    delete<T extends string>(req : Request<T>, res : Response): Response {
+        const userID = Number(req.query.id)
+        usersDB.filter(user => user.id !== userID)
+        return res.json()
     }
 }
 class UsersClass extends SessionsControllers{
