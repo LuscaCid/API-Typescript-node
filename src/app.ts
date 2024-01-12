@@ -73,7 +73,6 @@ interface ISessionsControllers {
     delete(req : Request<string>, res : Response) : Response
 }
 
-
 class SessionsControllers implements ISessionsControllers{
     create(request : Request, response : Response): Response {
         const user : User = request.body
@@ -82,14 +81,17 @@ class SessionsControllers implements ISessionsControllers{
         if(userExists) return response.status(401).json({message : "user already exists"})
         const userObject : User = new UsersClass(user.name, user.password, user.email)
         usersDB.push(userObject)
-        return response.status(201).json({message : "created"})
+        return response.status(201).json({
+            message : "created",
+            database : usersDB
+        })
     }
 
     delete<T extends string>(req : Request<T>, res : Response): Response {
         const userID = Number(req.query.id)
         usersDB.filter(user => user.id !== userID)
         return res.json()
-    }
+    } 
 }
 class UsersClass extends SessionsControllers{
     id : number = Math.round(Math.random() * 10000)
@@ -106,4 +108,8 @@ class UsersClass extends SessionsControllers{
 }
 
 
-app.post('/sessions/register')
+const sessionsController= new SessionsControllers()
+app.post('/sessions/register', sessionsController.create)
+app.post('/users/viewall', (req : Request, res : Response) => {
+    return res.json(usersDB)
+})
