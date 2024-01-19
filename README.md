@@ -1,9 +1,9 @@
-# Estudos com typescrip dentro do universo backend
+# Estudos com Typescript dentro do universo backend
 
 ## Me utiizando de interfaces, types, literal types, union types, generics e muitas outras features do typescript para incrementar nos meus projetos backend e frontend
 
 
-# command para  instalar as dependencias inicias para desenvolvimento com typescriop
+# command para  instalar as dependencias inicias para desenvolvimento com Typescript 
 
 npm install @types/node @types/express ts-node-dev typescript --save-dev
 
